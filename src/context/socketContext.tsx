@@ -5,7 +5,7 @@ const WS_Server = "http://localhost:5500";
 
 const socket: Socket = io(WS_Server);
 
-const SocketContext = createContext<Socket | null>(null);
+export const SocketContext = createContext<Socket | null>(null);
 
 interface Props {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ interface Props {
 
 const SocketProvider: React.FC<Props> = ({ children }) => {
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={{socket}}>{children}</SocketContext.Provider>
   );
 };
 
