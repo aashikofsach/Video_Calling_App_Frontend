@@ -37,14 +37,18 @@ const SocketProvider: React.FC<Props> = ({ children }) => {
 
 const fetchUserFeed = async () =>{
   // below one is browser api and not the react thing 
-//  const stream = await navigator.mediaDevices.getUserMedia({video : true , audio : true }) ;
-//  setStream(stream);
+ const stream = await navigator.mediaDevices.getUserMedia({video : true , audio : true }) ;
+ setStream(stream);
 }
 
   useEffect(() => {
     const userId = uuidv4();
 
-    const newPeer = new Peer(userId);
+    const newPeer = new Peer(userId, {
+      host : "localhost",
+      port : 9000,
+      path : "/myapp"
+    });
 
     setUser(newPeer);
     fetchUserFeed();
