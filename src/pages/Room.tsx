@@ -11,6 +11,7 @@ const Room: React.FC = () => {
   useEffect(() => {
     // this message we sent when the new user create the room and joined and also
     // when the some other user is entering  in the room which is laready created
+    // console.log("yeh bhi chalna chahiye tha ",user)
     if (user) socket.emit("joined-room", { roomId: id, peerId: user._id });
   }, [user,socket,id]);
   return <div>room is : {id} </div>;

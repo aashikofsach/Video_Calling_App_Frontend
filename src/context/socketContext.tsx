@@ -14,6 +14,15 @@ interface Props {
   children: React.ReactNode;
 }
 
+const fetchParticipantsList = ({
+  room,
+  participants,
+}: {
+  room: string;
+  participants: string[];
+}) => {
+  console.log(room, participants);
+};
 const SocketProvider: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
 
@@ -32,10 +41,12 @@ const SocketProvider: React.FC<Props> = ({ children }) => {
     };
 
     socket.on("room-created", enterRoom);
+
+    socket.on("get-users", fetchParticipantsList);
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket , user }}>
+    <SocketContext.Provider value={{ socket, user }}>
       {children}
     </SocketContext.Provider>
   );
