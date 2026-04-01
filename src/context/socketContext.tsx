@@ -9,6 +9,7 @@ const WS_Server = "http://localhost:5500";
 const socket: Socket = io(WS_Server);
 
 export const SocketContext = createContext<Socket | null>(null);
+// export const SocketContext = createContext<{ socket: Socket; user?: Peer; stream?: MediaStream } | null>(null);
 
 interface Props {
   children: React.ReactNode;
@@ -24,30 +25,30 @@ const fetchParticipantsList = ({
   console.log(room, participants);
 };
 
- 
 // }
 const SocketProvider: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
 
   // state variable to store the new user Id , every time when new user join the room
   const [user, setUser] = useState<Peer>();
-  const [stream , setStream] = useState<MediaStream>() ;
+  const [stream, setStream] = useState<MediaStream>();
 
-  
-
-const fetchUserFeed = async () =>{
-  // below one is browser api and not the react thing 
- const stream = await navigator.mediaDevices.getUserMedia({video : true , audio : true }) ;
- setStream(stream);
-}
+  const fetchUserFeed = async () => {
+    // below one is browser api and not the react thing
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    setStream(stream);
+  };
 
   useEffect(() => {
     const userId = uuidv4();
 
     const newPeer = new Peer(userId, {
-      host : "localhost",
-      port : 9000,
-      path : "/myapp"
+      host: "localhost",
+      port: 9000,
+      path: "/myapp",
     });
 
     setUser(newPeer);
@@ -63,7 +64,7 @@ const fetchUserFeed = async () =>{
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, user , stream}}>
+    <SocketContext.Provider value={{ socket, user, stream }}>
       {children}
     </SocketContext.Provider>
   );
