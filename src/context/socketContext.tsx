@@ -4,6 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import Peer from "peerjs";
 import { peerReducer } from "../Reducers/peerReducer";
+import { createPeerAction } from "../Actions/peerAction";
 
 const WS_Server = "http://localhost:5500";
 
@@ -72,6 +73,9 @@ const SocketProvider: React.FC<Props> = ({ children }) => {
     socket.on("user-joined", ({ peerId }) => {
       const call = user.call(peerId, stream);
       console.log("calling the new peer ", peerId);
+      call.on("stream", ()=>{
+        dispatch(createPeerAction(peerId , stream))
+      })
     });
 
     user.on("call", (call) => {
@@ -79,6 +83,9 @@ const SocketProvider: React.FC<Props> = ({ children }) => {
 
       console.log("recieving a call");
       call.answer(stream);
+       call.on("stream", (stream)=>{
+        dispatch(createPeerAction(call.peer , stream))
+      })
     });
     // this below event emit when the new user is joined ()
     // here new user is joined with his user peer id and stream , that' why we emit this emit event here
@@ -89,7 +96,7 @@ const SocketProvider: React.FC<Props> = ({ children }) => {
   }, [user, stream]);
 
   return (
-    <SocketContext.Provider value={{ socket, user, stream }}>
+    <SocketContext.Provider value={{ socket, user, stream , peers }}>
       {children}
     </SocketContext.Provider>
   );
